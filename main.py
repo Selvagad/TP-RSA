@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
+import primesieve
+from maths_utils import *
 
-def calcul():
-    print("toto")
+def generate():
+    print(generatePrimeNumber())
 
 #create .pub and .priv files
 def createFiles(filename):
@@ -27,9 +29,20 @@ try :
                 # Check if there are enough parameters
                 if(len(sys.argv) <= index+1 ):
                     createFiles(None)
+                #============= Generate keys ===============
                 else:
                     createFiles(sys.argv[index+1])
-
+                    p = generatePrimeNumber()
+                    q = generatePrimeNumber()
+                    n = p*q
+                    n_prim = (p-1)*(q-1)
+                    e, d = findFirstED(n_prim)
+                    print("p=", p)
+                    print("q=", q)
+                    print("n=", n)
+                    print("n\'=", n_prim)
+                    print("e=", e)
+                    print("d=", d)
 
 except:
     print('\nScript monRSA par Adam Selvaggio\nSyntaxe :')
