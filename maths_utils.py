@@ -3,6 +3,9 @@
 
 import primesieve
 import random
+# from sympy import *
+import sympy
+
 
 
 def generatePrimeNumber():
@@ -26,7 +29,7 @@ def prime_factors(n):
 def get2PrimeFactors(n):
     a = 1
     res = []
-    facteurs = prime_factors(n)
+    facteurs = sympy.factorint(n, multiple=True)
     if (len(facteurs) > 2):
         for i in range(len(facteurs)):
             if i != len(facteurs)-1:
@@ -53,16 +56,3 @@ def findFirstED(n_prime):
         else:
             in_progress = False
             return e,d
-
-
-p = primesieve.n_primes(1, random.randint(1000000000, 10000000000-1))[0]
-q = primesieve.n_primes(1, random.randint(1000000000, 10000000000-1))[0]
-n = p*q
-n_prim = (p-1)*(q-1)
-e, d = findFirstED(n_prim)
-print("p=", p)
-print("q=", q)
-print("n=", n)
-print("n\'=", n_prim)
-print("e=", e)
-print("d=", d)
