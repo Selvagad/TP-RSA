@@ -67,24 +67,6 @@ def computeCoefs():
     print("d=", d)
     return n,e,d
 
-def crypt(keyFile):
-    # calculer la taille de n'-1 pour avoir la taille des blocs par ex n'= 6254 donc taille de bloc = 3
-    # et pour le dernier bloc je mets des zéros pour remplir
-    # donc on crypt de D vers G je crois
-    f = open(keyFile, "r")
-    if ".pub" in keyFile:
-        keyFile = keyFile[0: -4]
-    if(f.readline() == "---begin {} public key---\n".format(keyFile)):
-        decode_msg = decode_stringB64(f.readline())
-        splitted = decode_msg.split('\n')
-        n = int(splitted[0], 16)
-        e = splitted[1]
-        blocSize = len(str(n))
-        print(blocSize)
-    else:
-        print("Le fichier de clé publique n'est pas bon")
-    f.close()
-
 def getKeyFromFile(keyFile, fileType):
     if(fileType == 'pub'):
         if(".pub" not in keyFile):
