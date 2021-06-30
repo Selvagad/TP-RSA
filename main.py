@@ -21,16 +21,32 @@ def createFiles(filename, n, e, d):
 
 def writeInFile(filename, n, e, d):
     if(filename == None):
+        # Generate public key file
         txt = hex(n)+"\n"+hex(e)
         f = open("monRSA.pub", "w")
         f.write("---begin monRSA public key---\n")
         f.write(encode_stringB64(txt)+"\n")
         f.write("---end monRSA key---\n")
         f.close()
+        #Generate private key file
+        txt = hex(n)+"\n"+hex(d)
+        f = open("monRSA.priv", "w")
+        f.write("---begin monRSA private key---\n")
+        f.write(encode_stringB64(txt)+"\n")
+        f.write("---end monRSA key---\n")
+        f.close()
     else:
+        # Generate public key file
         txt = hex(n)+"\n"+hex(e)
         f = open(filename, "w")
         f.write("---begin {} public key---\n".format(filename[0: -4]))
+        f.write(encode_stringB64(txt)+"\n")
+        f.write("---end {} key---\n".format(filename[0: -4]))
+        f.close()
+        #Generate private key file
+        txt = hex(n)+"\n"+hex(d)
+        f = open(filename, "w")
+        f.write("---begin {} private key---\n".format(filename[0: -4]))
         f.write(encode_stringB64(txt)+"\n")
         f.write("---end {} key---\n".format(filename[0: -4]))
         f.close()
