@@ -2,9 +2,21 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from typing import KeysView
 from maths_utils import *
 from crypto_utils import *
 from os import path,remove
+
+def checkForISwitch():
+    #check if there is something after the switch
+    if("-s" in sys.argv):
+        try:
+            keySize = sys.argv[sys.argv.index("-i")+1]
+            return keySize
+        except:
+            raise Exception("Erreur: switch i manque paramètre")
+    else:
+        return 10
 
 # Main()
 try :
@@ -18,12 +30,16 @@ try :
         for element in sys.argv:
             if(element == '-f'):
                 index = sys.argv.index(element)
-                # Check if there are enough parameters
+                # Check if there is the name for the key file
                 if(len(sys.argv) <= index+1 ):
+                    sizeKeygen = checkForISwitch()
+                    print(sizeKeygen)
                     n,e,d = computeCoefs(10)
                     createFiles(None, n, e, d)
                 #============= Generate keys ===============
                 else:
+                    sizeKeygen = checkForISwitch()
+                    print(sizeKeygen)
                     n,e,d = computeCoefs(10)
                     createFiles(sys.argv[index+1], n, e, d)
     else:
@@ -46,5 +62,6 @@ except Exception as exc:
     print('Commande :\n\tkeygen : Génére une paire de clé\n\tcrytp : Chiffre <texte> pour la clé publique <clé>\n\tdecrytp: Déchiffre <texte> pour la clé privée <clé>\n\thelp : Affiche ce manuel')
     print('Clé :\n\tUn fichier qui contient une clé publique monRSA ("crypt") ou une clé privée ("decrypt")')
     print('Texte :\n\tUne phrase en clair ("crypt") ou une phrase chiffrée ("decrypt")')
-    print('Switchs\n\t-f <file> permet de choisir le nom des clé générés, monRSA.pub et monRSA.priv par défaut\n')
+    print('Switchs\n\t-f <file> permet de choisir le nom des clé générés, monRSA.pub et monRSA.priv par défaut')
+    print('\t-s <size> permet de définir la taille')
     exit(1)
