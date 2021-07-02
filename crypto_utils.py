@@ -47,15 +47,15 @@ def writeInFile(filename, n, e, d):
         f.close()
         #Generate private key file
         txt = hex(n)+"\n"+hex(d)
-        f = open(filename, "w")
+        f = open(filename[0: -4]+".priv", "w")
         f.write("---begin {} private key---\n".format(filename[0: -4]))
         f.write(encode_stringB64(txt)+"\n")
         f.write("---end {} key---\n".format(filename[0: -4]))
         f.close()
 
-def computeCoefs():
-    p = primesieve.n_primes(1, random.randint(1000000000, 10000000000-1))[0]
-    q = primesieve.n_primes(1, random.randint(1000000000, 10000000000-1))[0]
+def computeCoefs(size):
+    p = primesieve.n_primes(1, random.randint(10**int(size), 10**(int(size)+1)-1))[0]
+    q = primesieve.n_primes(1, random.randint(10**int(size), 10**(int(size)+1)-1))[0]
     n = p*q
     n_prim = (p-1)*(q-1)
     e, d = findFirstED(n_prim)
@@ -74,20 +74,23 @@ def getKeyFromFile(keyFile, fileType):
         else:
             f = open(keyFile, "r")
             keyFile = keyFile[0: -4]
-            if(f.readline() == "---begin {} public key---\n".format(keyFile)):
+            first_line = f.readline()
+            print(first_line)
+            if(first_line == "---begin {} public key---\n".format(keyFile)):
                 return (f.readline().split('\n')[0])
             else:
-                print("PB ouverture fichier clé")
+                print("PB ouverture fichier clé publique")
     elif(fileType == 'priv'):
         if(".priv" not in keyFile):
             raise Exception("Mauvais fichier de clé fourni")
         else:
             f = open(keyFile, "r")
             keyFile = keyFile[0: -5]
-            if(f.readline() == "---begin {} private key---\n".format(keyFile)):
+            first_line = f.readline()
+            if(first_line == "---begin {} private key---\n".format(keyFile)):
                 return (f.readline().split('\n')[0])
             else:
-                print("PB ouverture fichier clé")
+                print("PB ouverture fichier clé privée")
     f.close()
 
 def encrypt(key, string):

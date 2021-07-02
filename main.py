@@ -4,6 +4,7 @@
 import sys
 from maths_utils import *
 from crypto_utils import *
+from os import path,remove
 
 # Main()
 try :
@@ -19,11 +20,11 @@ try :
                 index = sys.argv.index(element)
                 # Check if there are enough parameters
                 if(len(sys.argv) <= index+1 ):
-                    n,e,d = computeCoefs()
+                    n,e,d = computeCoefs(10)
                     createFiles(None, n, e, d)
                 #============= Generate keys ===============
                 else:
-                    n,e,d = computeCoefs()
+                    n,e,d = computeCoefs(10)
                     createFiles(sys.argv[index+1], n, e, d)
     else:
         if(sys.argv[1] == "crypt" and sys.argv[2] != ""):
@@ -37,6 +38,9 @@ try :
 
 except Exception as exc:
     print('\033[91m',exc,'\033[0m')
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    print(exc_type, fname, exc_tb.tb_lineno)
     print('\nScript monRSA par Adam Selvaggio\nSyntaxe :')
     print('\t\033[1mmonRSA\033[0m <commande> [<clé>] [<texte>] [switchs]\n')
     print('Commande :\n\tkeygen : Génére une paire de clé\n\tcrytp : Chiffre <texte> pour la clé publique <clé>\n\tdecrytp: Déchiffre <texte> pour la clé privée <clé>\n\thelp : Affiche ce manuel')
