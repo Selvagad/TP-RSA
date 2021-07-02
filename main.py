@@ -7,12 +7,40 @@ from maths_utils import *
 from crypto_utils import *
 from os import path,remove
 
-def checkForISwitch():
+from mpmath.functions.functions import re
+
+def checkForSSwitch():
     #check if there is something after the switch
     if("-s" in sys.argv):
         try:
-            keySize = sys.argv[sys.argv.index("-i")+1]
+            keySize = sys.argv[sys.argv.index("-s")+1]
             return keySize
+        except:
+            raise Exception("Erreur: switch s manque paramètre")
+    else:
+        return 10
+
+def checkForISwitch(method):
+    #check if there is something after the switch
+    if("-i" in sys.argv):
+        try:
+            file = sys.argv[sys.argv.index("-i")+1]
+            if (method == "encrypt"):
+                f = open(file, "r")
+                txt = f.readline()
+                f.close()
+                if(txt == ""):
+                    raise Exception("Erreur: le fichier du texte à chiffrer est vide")
+                else:
+                    return txt
+            else:
+                f = open(file, "r")
+                txt = f.readline()
+                f.close()
+                if(txt == ""):
+                    raise Exception("Erreur: le fichier du texte à déchiffrer est vide")
+                else:
+                    return txt
         except:
             raise Exception("Erreur: switch i manque paramètre")
     else:
@@ -32,21 +60,21 @@ try :
                 index = sys.argv.index(element)
                 # Check if there is the name for the key file
                 if(len(sys.argv) <= index+1 ):
-                    sizeKeygen = checkForISwitch()
+                    sizeKeygen = checkForSSwitch()
                     print(sizeKeygen)
-                    n,e,d = computeCoefs(10)
+                    n,e,d = computeCoefs(sizeKeygen)
                     createFiles(None, n, e, d)
                 #============= Generate keys ===============
                 else:
-                    sizeKeygen = checkForISwitch()
-                    print(sizeKeygen)
-                    n,e,d = computeCoefs(10)
+                    sizeKeygen = checkForSSwitch()
+                    print("La taille de la clé est: ",sizeKeygen)
+                    n,e,d = computeCoefs(sizeKeygen)
                     createFiles(sys.argv[index+1], n, e, d)
     else:
         if(sys.argv[1] == "crypt" and sys.argv[2] != ""):
-            encrypt(getKeyFromFile(sys.argv[2], "pub"),sys.argv[3])
+            encrypt(getKeyFromFile(sys.argv[2], "pub"),checkForISwitch("encrypt"))
         elif (sys.argv[1] == "decrypt" and sys.argv[2] != ""):
-            decrypt(getKeyFromFile(sys.argv[2], "priv"),sys.argv[3])
+            decrypt(getKeyFromFile(sys.argv[2], "priv"),checkForISwitch("decrypt"))
         else:
             raise Exception("Erreur: Vérifier la syntaxe")
 
