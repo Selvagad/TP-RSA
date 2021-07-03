@@ -75,7 +75,6 @@ def getKeyFromFile(keyFile, fileType):
             f = open(keyFile, "r")
             keyFile = keyFile[0: -4]
             first_line = f.readline()
-            print(first_line)
             if(first_line == "---begin {} public key---\n".format(keyFile)):
                 return (f.readline().split('\n')[0])
             else:
@@ -93,21 +92,23 @@ def getKeyFromFile(keyFile, fileType):
                 print("PB ouverture fichier clé privée")
     f.close()
 
-def encrypt(key, string):
+def encrypt(key, string, switch):
     enc = []
     for i in range(len(string)):
         key_c = key[i % len(key)]
         enc_c = chr((ord(string[i]) + ord(key_c)) % 256)
         enc.append(enc_c)
-    print(base64.urlsafe_b64encode("".join(enc).encode()).decode())
+    if (switch == False):
+        print(base64.urlsafe_b64encode("".join(enc).encode()).decode())
     return base64.urlsafe_b64encode("".join(enc).encode()).decode()
 
-def decrypt(key, string:str):
+def decrypt(key, string, switch):
     dec = []
     enc = base64.urlsafe_b64decode(string).decode()
     for i in range(len(enc)):
         key_c = key[i % len(key)]
         dec_c = chr((256 + ord(enc[i]) - ord(key_c)) % 256)
         dec.append(dec_c)
-    print("".join(dec))
+    if (switch == False):
+        print("".join(dec))
     return "".join(dec)

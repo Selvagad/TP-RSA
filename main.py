@@ -44,37 +44,72 @@ def checkForISwitch(method):
         except:
             raise Exception("Erreur: switch i manque paramètre")
     else:
-        return 10
+        return sys.argv[3]
+
+def checkForOSwitch():
+    #check if there is something after the switch
+    if("-o" in sys.argv):
+        return True
+    else:
+        return False
 
 # Main()
 try :
     #============= Params Management =============
     if len(sys.argv) == 1 or sys.argv[1] == 'help':
         raise Exception()
+    # Check if there is crypt or decrypt option and if yes, check for an option after the argument
     elif ((sys.argv[1] == "crypt" or sys.argv[1] == "decrypt") and len(sys.argv) < 4):
         print("Il faut saisir la clé et le texte")
         raise Exception()
     elif (sys.argv[1] == 'keygen'):
-        for element in sys.argv:
-            if(element == '-f'):
-                index = sys.argv.index(element)
-                # Check if there is the name for the key file
-                if(len(sys.argv) <= index+1 ):
-                    sizeKeygen = checkForSSwitch()
-                    print(sizeKeygen)
-                    n,e,d = computeCoefs(sizeKeygen)
-                    createFiles(None, n, e, d)
-                #============= Generate keys ===============
-                else:
-                    sizeKeygen = checkForSSwitch()
-                    print("La taille de la clé est: ",sizeKeygen)
-                    n,e,d = computeCoefs(sizeKeygen)
-                    createFiles(sys.argv[index+1], n, e, d)
+        # Check if -f switch is in arguments
+        if('-f' in sys.argv):
+            # Parse all arguments
+            for element in sys.argv:
+                if(element == '-f'):
+                    index = sys.argv.index(element)
+                    # Check if there is an option after the switch '-f'
+                    if(len(sys.argv) <= index+1 ):
+                        sizeKeygen = checkForSSwitch()
+                        print("La taille de la clé est: ",sizeKeygen)
+                        n,e,d = computeCoefs(sizeKeygen)
+                        createFiles(None, n, e, d)
+                    #============= Generate keys ===============
+                    else:
+                        sizeKeygen = checkForSSwitch()
+                        print("La taille de la clé est: ",sizeKeygen)
+                        n,e,d = computeCoefs(sizeKeygen)
+                        createFiles(sys.argv[index+1], n, e, d)
+        # If there is no option create default 'MonRSA' files
+        else:
+            sizeKeygen = checkForSSwitch()
+            print("La taille de la clé est: ",sizeKeygen)
+            n,e,d = computeCoefs(sizeKeygen)
+            createFiles(None, n, e, d)
     else:
+        # =================== Crypt part ===================
         if(sys.argv[1] == "crypt" and sys.argv[2] != ""):
-            encrypt(getKeyFromFile(sys.argv[2], "pub"),checkForISwitch("encrypt"))
+            # Check for '-o' switch
+            if(checkForOSwitch()):
+                # Write in file the crypted message into a file
+                msg = encrypt(getKeyFromFile(sys.argv[2], "pub"),checkForISwitch("encrypt"), True)
+                f = open("msg_encrypted.txt", "w")
+                f.write(msg)
+            else:
+                # Write in file the crypted message in the console
+                encrypt(getKeyFromFile(sys.argv[2], "pub"),checkForISwitch("encrypt"), False)
+        # =================== Derypt part ===================
         elif (sys.argv[1] == "decrypt" and sys.argv[2] != ""):
-            decrypt(getKeyFromFile(sys.argv[2], "priv"),checkForISwitch("decrypt"))
+            # Check for '-o' switch
+            if(checkForOSwitch()):
+                # Write in file the decrypted message into a file
+                msg = decrypt(getKeyFromFile(sys.argv[2], "priv"),checkForISwitch("decrypt"), True)
+                f = open("msg_decrypted.txt", "w")
+                f.write(msg)
+            else:
+                # Write in file the decrypted message in the console
+                decrypt(getKeyFromFile(sys.argv[2], "priv"),checkForISwitch("decrypt"), False)
         else:
             raise Exception("Erreur: Vérifier la syntaxe")
 
@@ -92,4 +127,5 @@ except Exception as exc:
     print('Texte :\n\tUne phrase en clair ("crypt") ou une phrase chiffrée ("decrypt")')
     print('Switchs\n\t-f <file> permet de choisir le nom des clé générés, monRSA.pub et monRSA.priv par défaut')
     print('\t-s <size> permet de définir la taille')
+    print('\t-o retourne le résultat du chiffrement ou déchiffrement dans un fichier')
     exit(1)
