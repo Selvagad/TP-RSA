@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from typing import KeysView
 from maths_utils import *
 from crypto_utils import *
 from os import path,remove
