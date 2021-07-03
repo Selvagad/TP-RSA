@@ -1,0 +1,17 @@
+pip install primesieve
+pip install sympy
+python.exe .\main.py keygen -f myPersonalKey -s 12
+echo "Hello World!" >> tocrypt.txt
+python.exe .\main.py crypt myPersonalKey.pub -i tocrypt.txt -o crypt_result.txt
+cat crypt_result.txt
+python.exe .\main.py decrypt myPersonalKey.priv -i crypt_result.txt -o decrypt_result.txt
+cat decrypt_result.txt
+
+pip install primesieve
+pip install sympy
+python main.py keygen -f myPersonalKey -s 12
+echo 'Hello World!' >> tocrypt.txt
+python main.py crypt myPersonalKey.pub -i tocrypt.txt -o crypt_result.txt
+cat crypt_result.txt
+python main.py decrypt myPersonalKey.priv -i crypt_result.txt -o decrypt_result.txt
+cat decrypt_result.txt
