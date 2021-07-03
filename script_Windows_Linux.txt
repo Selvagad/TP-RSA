@@ -1,17 +1,22 @@
+Sur Windows 
+(Attention à l'encodage lors de la commande echo, il se peut que ça rajoute des 
+caractères non voulus, dans ce cas créer un fichier avec un éditeur et rentrer
+le message directement via l'éditeur)
 pip install primesieve
 pip install sympy
-python.exe .\main.py keygen -f myPersonalKey -s 12
+python.exe main.py keygen -f myPersonalKey -s 12
 echo "Hello World!" >> tocrypt.txt
-python.exe .\main.py crypt myPersonalKey.pub -i tocrypt.txt -o crypt_result.txt
+python.exe main.py crypt myPersonalKey.pub -i tocrypt.txt -o crypt_result.txt
 cat crypt_result.txt
-python.exe .\main.py decrypt myPersonalKey.priv -i crypt_result.txt -o decrypt_result.txt
+python.exe main.py decrypt myPersonalKey.priv -i crypt_result.txt -o decrypt_result.txt
 cat decrypt_result.txt
 
+Sur Linux
 pip install primesieve
 pip install sympy
-python main.py keygen -f myPersonalKey -s 12
+python3 main.py keygen -f myPersonalKey -s 12
 echo 'Hello World!' >> tocrypt.txt
-python main.py crypt myPersonalKey.pub -i tocrypt.txt -o crypt_result.txt
+python3 main.py crypt myPersonalKey.pub -i tocrypt.txt -o crypt_result.txt
 cat crypt_result.txt
-python main.py decrypt myPersonalKey.priv -i crypt_result.txt -o decrypt_result.txt
+python3 main.py decrypt myPersonalKey.priv -i crypt_result.txt -o decrypt_result.txt
 cat decrypt_result.txt
