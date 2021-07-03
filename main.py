@@ -49,10 +49,13 @@ def checkForISwitch(method):
 def checkForOSwitch():
     #check if there is something after the switch
     if("-o" in sys.argv):
-        return True
+        try:
+            fileName = sys.argv[sys.argv.index("-o")+1]
+            return fileName
+        except:
+            return "default"
     else:
-        return False
-
+        return None
 # Main()
 try :
     #============= Params Management =============
@@ -90,26 +93,41 @@ try :
     else:
         # =================== Crypt part ===================
         if(sys.argv[1] == "crypt" and sys.argv[2] != ""):
+            switchOValue = checkForOSwitch()
             # Check for '-o' switch
-            if(checkForOSwitch()):
+            if(switchOValue == "default"):
                 # Write in file the crypted message into a file
                 msg = encrypt(getKeyFromFile(sys.argv[2], "pub"),checkForISwitch("encrypt"), True)
                 f = open("msg_encrypted.txt", "w")
                 f.write(msg)
-            else:
+            elif(switchOValue == None):
                 # Write in file the crypted message in the console
                 encrypt(getKeyFromFile(sys.argv[2], "pub"),checkForISwitch("encrypt"), False)
+            else:
+                # Write in file the crypted message into a file
+                print("Wrinting result into file ...")
+                msg = encrypt(getKeyFromFile(sys.argv[2], "pub"),checkForISwitch("encrypt"), True)
+                f = open(switchOValue, "w")
+                f.write(msg)
         # =================== Derypt part ===================
         elif (sys.argv[1] == "decrypt" and sys.argv[2] != ""):
+            switchOValue = checkForOSwitch()
             # Check for '-o' switch
-            if(checkForOSwitch()):
+            if(switchOValue == "default"):
                 # Write in file the decrypted message into a file
+                print("Wrinting result into file ...")
                 msg = decrypt(getKeyFromFile(sys.argv[2], "priv"),checkForISwitch("decrypt"), True)
                 f = open("msg_decrypted.txt", "w")
                 f.write(msg)
-            else:
+            elif(switchOValue == None):
                 # Write in file the decrypted message in the console
                 decrypt(getKeyFromFile(sys.argv[2], "priv"),checkForISwitch("decrypt"), False)
+            else:
+                # Write in file the decrypted message into a file
+                print("Wrinting result into file ...")
+                msg = decrypt(getKeyFromFile(sys.argv[2], "priv"),checkForISwitch("decrypt"), True)
+                f = open(switchOValue, "w")
+                f.write(msg)
         else:
             raise Exception("Erreur: Vérifier la syntaxe")
 
